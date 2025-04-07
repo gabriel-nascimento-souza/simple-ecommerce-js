@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Carrinho de Compras</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <header>
+    <h1 class="loja">
+      <a href="Landing Page.html" style="text-decoration: none; color: black;">
+        <img src="https://cdn-icons-png.flaticon.com/512/1077/1077979.png" alt="logo" width="30" />
+        Sua Loja Aqui
+      </a>
+    </h1>
+
+    <div id="carrinho-status" style="margin-left: auto;">
+      <a href="carrinho.html" style="text-decoration: none; color: black;">
+        🛒 Itens no carrinho: <span id="carrinho-contador">0</span>
+      </a>
+    </div>
+  </header>
+
+  <main style="padding: 20px;">
+    <h2>🛒 Carrinho de Compras</h2>
+    <div id="carrinho-itens">
+      <p>Carregando itens do carrinho...</p>
+    </div>
+    <div id="total-carrinho" style="margin-top: 20px; font-weight: bold;"></div>
+
+    <button onclick="finalizarCompra()" style="margin-top: 20px;">Finalizar Compra</button>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Nome da Loja - Todos os direitos reservados</p>
+    <nav>
+      <ul id="links">
+        <li><a href="Landing Page.html">Home</a></li>
+        <li><a href="Landing Page.html">Produtos</a></li>
+        <li><a href="Landing Page.html">Contato</a></li>
+      </ul>
+    </nav>
+  </footer>
+  <script>
+    let carrinhoContador = document.getElementById('carrinho-contador');
+    let contador = parseInt(localStorage.getItem('contador')) || 0;
+
+    if (carrinhoContador) {
+      carrinhoContador.innerText = contador;
+    }
+
+    document.querySelectorAll('.adicionar-carrinho').forEach(botao => {
+      botao.addEventListener('click', () => {
+        contador++;
+        if (carrinhoContador) {
+          carrinhoContador.innerText = contador;
+        }
+        localStorage.setItem('contador', contador);
+
+        const produto = botao.closest('.produto');
+        const nome = produto.querySelector('h3').innerText;
+        const descricao = produto.querySelector('p').innerText;
+        const preco = produto.querySelector('.preco').innerText;
+        const img = produto.querySelector('img').src;
+
+        let carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
+        carrinho.push({ nome, descricao, preco, img });
+        localStorage.setItem('carrinho', JSON.stringify(carrinho));
+      });
+    });
+
+    const containerCarrinho = document.getElementById('carrinho-itens');
+    if (containerCarrinho) {
+      const carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
+
+      if (carrinho.length === 0) {
+        containerCarrinho.innerHTML = "<p>Seu carrinho está vazio.</p>";
+      } else {
+        let html = '<ul>';
+        carrinho.forEach((item, index) => {
+          html += `
+        <li>
+          <strong>${item.nome}</strong> - ${item.preco}
+          <button onclick="removerItem(${index})">Remover</button>
+        </li>
+      `;
+        });
+        html += '</ul>';
+        containerCarrinho.innerHTML = html;
+      }
+    }
+
+    function removerItem(index) {
+      let carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
+      if (index >= 0 && index < carrinho.length) {
+        carrinho.splice(index, 1);
+        localStorage.setItem('carrinho', JSON.stringify(carrinho));
+
+        contador = carrinho.length;
+        localStorage.setItem('contador', contador);
+        if (carrinhoContador) {
+          carrinhoContador.innerText = contador;
+        }
+
+        location.reload();
+      }
+    }
+
+    function finalizarCompra() {
+      alert("Compra finalizada com sucesso!");
+      localStorage.removeItem('carrinho');
+      localStorage.removeItem('contador');
+      location.reload();
+    }
+  </script>
+</body>
+
+</html>

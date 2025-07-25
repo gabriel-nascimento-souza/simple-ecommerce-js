@@ -23,7 +23,3 @@
 - **Frontend**: Vanilla JavaScript, HTML5, CSS3
 - **State Management**: LocalStorage API
 - **Styling**: Pure CSS (no frameworks)
-
-## Live Demo
-[▶️ Try it here!](https://gabriel-nascimento-souza.github.io/simple-e-commerce-js/)  
-*(Hosted on GitHub Pages)*
